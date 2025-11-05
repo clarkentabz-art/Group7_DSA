@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Group Portfolio{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Caveat&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="{{ url_for('home') }}">🏠 Home</a>
+            <a href="{{ url_for('profile') }}">💖 Profiles</a>
+            <a href="{{ url_for('works') }}">🎨 Works</a>
+            <a href="{{ url_for('contacts') }}">📞 Contacts</a>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>♡ made by Group 7 ♡</p>
+    </footer>
+</body>
+</html>

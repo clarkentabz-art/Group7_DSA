@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Works{% endblock %}
+
+{% block content %}
+<section class="works-section">
+
+    <h2>our queue ✧</h2>
+
+    <div class="tool-box">
+    <h3>linked list creator</h3>
+    <a href="{{ url_for('linkedlist') }}">
+        <button type="button">open 💌</button>
+    </a>
+</div>
+
+    {% if result is not none %}
+    <div class="result-box">
+        <p><b>Result:</b> {{ result }}</p>
+    </div>
+    {% endif %}
+
+</section>
+{% endblock %}
+

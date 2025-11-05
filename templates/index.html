@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="welcome-section">
+    <div class="welcome-bar">
+        <h1>♡ Welcome to our Group Portfolio ☆ </h1>
+        <p>this is our group laboratory work on data structure and algorithm</p>
+    </div>
+
+    <div class="decor">
+        <img src="{{ url_for('static', filename='images/home.jpg') }}" alt="homepage" class="welcome-img">
+    </div>
+</section>
+{% endblock %}
