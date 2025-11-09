@@ -42,7 +42,6 @@ body {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 30px;
 }
 
 .welcome-bar {
@@ -230,4 +229,5 @@ footer {
     font-size: 0.9rem;
     color: #7b5544;
 }
+
 
