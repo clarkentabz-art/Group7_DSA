@@ -1,47 +1,7 @@
 from flask import Flask, render_template, request
+from myqueue import Queue
 
 app = Flask(__name__)
-
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
-class Queue:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-
-    def enqueue(self, data):
-        new_node = Node(data)
-        if self.head is None: 
-            self.head = new_node  
-            self.tail = new_node
-            return
-        else:
-            self.tail.next = new_node  
-            self.tail = new_node
-
-    def dequeue(self):
-            current = self.head
-            self.head = self.head.next
-            if self.head is None:
-                self.tail = None
-            return current.data
-
-    def display(self):
-        if self.head is None:
-            return None
-        else:
-            current = self.head
-            queue = []
-            while current:
-                queue.append(current.data)
-                current = current.next
-            list = (' '.join(queue))    
-            return list
-
-cashier = Queue()
 
 @app.route('/')
 def home():
@@ -62,27 +22,25 @@ def works():
         operation = request.form.get('operation')
     return render_template('works.html', result=result)
 
+order_queue = Queue() 
+
 @app.route('/queue', methods=['GET', 'POST'])
-def queue():
-    if request.method == "POST":
-        data = str(request.form.get('order', ''))
-        if not data:
-            if request.form.get('finishOrder') == 'orderServed':
-                cashier.dequeue()
-                result = cashier.display()
-                return render_template('queue.html', result=result)
-            else: 
-                result = cashier.display()
-                return render_template('queue.html', result=result)
-        elif request.form.get('enterOrder') == 'newOrder':
-            cashier.enqueue(data)
-            result = cashier.display()
-            return render_template('queue.html', result=result)
-        else:
-            result = cashier.display()
-            return render_template('queue.html', result=result)
-    result = cashier.display()
-    return render_template('queue.html', result=result)
+def queue_page():
+    result = None
+    if request.method == 'POST':
+        order = request.form.get('order')
+        if 'enterOrder' in request.form and order:
+            code = order_queue.enqueue(order)
+            result = f"Order added! Code: {code}"
+        elif 'finishOrder' in request.form:
+            served = order_queue.dequeue()
+            if served:
+                result = f"Served order {served['code']}"
+            else:
+                result = "Queue is empty!"
+
+    return render_template('queue.html', queue=order_queue.display(), result=result)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
