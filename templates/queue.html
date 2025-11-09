@@ -3,22 +3,18 @@
 
 {% block content %}
 <section>
-
-    <h1>Queue</h1>
-
-    <form action="/queue" method="post">
-    <div class="tool-box input">
-        <label for="inputString">Enter Order Number</label>
-        <input type="text" id="inputString" name="order">
-    </div>
-    <br>
-    <div class="tool-box button">
-        <button type="submit" name="enterOrder" value="newOrder">Add Order</button>
-    </div>
-
-    <div class="tool-box button">
-        <button type="submit" name="finishOrder" value="orderServed">Serve Order</button>
-    </div>
+<div class="works-section">
+    <h3>Queue</h3>
+    <form method="post" action="/queue">
+        <div class="tool-box input">
+            <input type="text" name="order" placeholder="Enter order">
+        </div>
+        <div class="tool-box button">
+            <button type="submit" name="enterOrder" value="newOrder">Add Order</button>
+        </div>
+        <div class="tool-box button">
+            <button type="submit" name="finishOrder" value="orderServed">Serve Order</button>
+        </div>
     </form>
 
     {% if result %}
@@ -26,6 +22,21 @@
         <p>{{ result }}</p>
     </div>
     {% endif %}
- 
+
+    <div class="queue-display">
+      {% if queue %}
+        <div class="stickman-line">
+          {% for item in queue %}
+            <div class="stickman" data-tooltip="{{ item.order }}">
+              🧍
+              <div class="code-label">{{ item.code }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="empty-text">Queue is empty 🌸</p>
+      {% endif %}
+    </div>
+</div>
 </section>
 {% endblock %}
