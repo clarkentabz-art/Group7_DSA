@@ -41,7 +41,7 @@
       <div class="stickman-line">
         {% for item in queue %}
           <div class="stickman {% if loop.first %}stickman-first{% endif %} {% if loop.last %}stickman-last{% endif %}" 
-              style="--order-code: {{ item.code }};" data-tooltip="Order: {{ item.code }}
+              data-tooltip="Order: {{ item.code }}
 Est. Wait: {{ item.waiting_time }}
 Total: P{{ '%.2f'|format(item.total_price) }}
 Items:
