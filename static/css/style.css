@@ -1,6 +1,7 @@
+
 /* 🌸 Font & base setup */
 body {
-    background-color: #fffaf5;
+    background-color: #fff6f2;
     font-family: 'Poppins', sans-serif;
     color: #5c4033;
     margin: 0;
@@ -9,8 +10,8 @@ body {
 
 /* 💖 Navbar */
 .navbar {
-    background-color: #fce4ec;
-    border-bottom: 3px solid #d7b7a3;
+    background-color: #ffeef7;
+    border-bottom: 3px solid #b5838d;
     display: flex;
     justify-content: center;
     gap: 1.5rem;
@@ -108,8 +109,8 @@ body {
 
 .tool-box h3 {
     font-family: 'Caveat', cursive;
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
 }
 
 .tool-box input, .tool-box button {
@@ -142,6 +143,25 @@ body {
     display: inline-block;
     padding: 2rem;
     margin-top: 2rem;
+}
+
+/* ✨ Hover Effects */
+.profile-card, .contact-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.profile-card:hover, .contact-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    cursor: pointer;
+}
+
+.profile-section, .contact-section {
+    display: grid;
+    grid-template-columns: repeat(3, auto); 
+    justify-content: center;
+    gap: 2rem; 
+    margin-top: 3rem;
 }
 
 /* 🌸 Footer */
