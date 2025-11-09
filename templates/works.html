@@ -3,15 +3,15 @@
 
 {% block content %}
 <section class="works-section">
-
-    <h2>our Works ✧</h2>
+    <br>
+    <h2>our works ✧</h2>
 
     <div class="tool-box">
-    <h3>Queue</h3>
-    <a href="{{ url_for('queue') }}">
-        <button type="button">open 💌</button>
-    </a>
-</div>
+        <h3>Queue</h3>
+        <a href="{{ url_for('queue') }}">
+            <button type="button">open 💌</button>
+        </a>
+    </div>
 
     {% if result is not none %}
     <div class="result-box">
@@ -21,4 +21,3 @@
 
 </section>
 {% endblock %}
-
