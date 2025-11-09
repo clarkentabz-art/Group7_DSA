@@ -170,8 +170,8 @@ body {
     gap: 5px;
     flex-wrap: wrap;
     justify-content: flex-start;
-    padding-left: 400px;
-    padding-right: 400px;
+    padding-left: 250px;
+    padding-right: 250px;
     padding-top: 70px;
 }
 
@@ -229,5 +229,6 @@ footer {
     font-size: 0.9rem;
     color: #7b5544;
 }
+
 
 
