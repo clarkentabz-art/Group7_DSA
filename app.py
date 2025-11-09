@@ -39,7 +39,7 @@ class Queue:
                 queue.append(current.data)
                 current = current.next
             list = (' '.join(queue))    
-            return  list
+            return list
 
 cashier = Queue()
 
@@ -82,7 +82,7 @@ def queue():
             result = cashier.display()
             return render_template('queue.html', result=result)
     result = cashier.display()
-    return render_template('queue.html', result=result), 
+    return render_template('queue.html', result=result)
 
 if __name__ == '__main__':
     app.run(debug=True)
