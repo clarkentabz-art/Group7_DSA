@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-import random
 from myqueue import Queue
 
 app = Flask(__name__)
@@ -29,18 +28,35 @@ order_queue = Queue()
 def queue_page():
     result = None
     if request.method == 'POST':
-        order = request.form.get('order')
-        if 'enterOrder' in request.form and order:
-            code = order_queue.enqueue(order)
-            result = f"Order added! Code: {code}"
+        
+        if 'enterOrder' in request.form:
+            selected_items = {}
+            for item_name in order_queue.MENU.keys():
+                quantity = request.form.get(item_name, 0, type=int)
+                if quantity > 0:
+                    selected_items[item_name] = quantity
+            
+            if selected_items:
+                order_details = order_queue.enqueue(selected_items)
+                
+                wait_mins, wait_secs = divmod(order_details['wait'], 60)
+                result = f"Order {order_details['code']} added! Total: P{order_details['total']:.2f}. Est. wait: {int(wait_mins)}m {int(wait_secs)}s"
+            else:
+                result = "Please select at least one item."
+                
         elif 'finishOrder' in request.form:
             served = order_queue.dequeue()
             if served:
                 result = f"Served order {served['code']}"
             else:
                 result = "Queue is empty!"
-
-    return render_template('queue.html', queue=order_queue.display(), result=result)
+    
+    return render_template(
+        'queue.html', 
+        queue=order_queue.display(), 
+        result=result,
+        menu=order_queue.MENU
+    )
 
 
 if __name__ == '__main__':

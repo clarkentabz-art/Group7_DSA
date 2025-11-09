@@ -164,52 +164,120 @@ body {
     background-color: #f8d9e6;
 }
 
-/* 🧍 Stickman*/
-.stickman-line {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding-left: 400px;
-    padding-right: 400px;
-    padding-top: 70px;
+/* 🌸 New Menu Styles */
+.menu-form {
+    background-color: #fffaf8;
+    border: 2px solid #d7b7a3;
+    border-radius: 15px;
+    adding: 1.5rem;
+    margin: 1rem auto;
+    width: 80%;
+    max-width: 950px; 
 }
 
+.menu-items {
+    
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem; 
+    text-align: left;   
+    margin-bottom: 1.5rem;
+}
+
+
+.menu-item {
+    
+    display: grid;
+    grid-template-columns: 1fr auto; 
+    align-items: center;
+    gap: 0.5rem; 
+
+    
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+
+.menu-item:hover {
+    background-color: #fce4ec; 
+}
+
+.menu-item-label {
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: left;
+    
+}
+
+
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #d7b7a3;
+    border-radius: 6px;
+    padding: 0.35rem;
+}
+
+/* 🧍 Stickman Line */
+.stickman-line {
+    display: grid;
+    grid-template-columns: repeat(10, auto);
+    gap: 10px;
+    justify-content: center;
+    min-height: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-right:100px;
+    padding-left: 100px;
+}
+
+/* 🧍 Stickman Tooltip Update */
 .stickman {
+    position: relative; 
     display: flex;
     flex-direction: column;
     align-items: center;
     font-size: 2rem;
+    transition: transform 0.2s ease;
 }
 
 .stickman::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ffeef7;
-  color: #5c4033;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #d7b7a3;
-  white-space: nowrap;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffeef7;
+    color: #5c4033;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #d7b7a3;
+    
+    white-space: pre-wrap; 
+    
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+    min-width: 220px;
+    text-align: left;
+    line-height: 1.6;
 }
 
 .stickman:hover {
-  transform: translateY(-8px);
+    transform: translateY(-5px);
 }
 
 .stickman:hover::after {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-10px);
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
 }
+
 
 .code-label {
     font-size: 0.8rem;
@@ -218,8 +286,8 @@ body {
 }
 
 @keyframes idle {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-5px); }
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
 }
 
 /* 🌸 Footer */

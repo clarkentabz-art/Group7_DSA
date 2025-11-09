@@ -4,16 +4,30 @@
 {% block content %}
 <section>
 <div class="works-section">
-    <h3>Queue</h3>
-    <form method="post" action="/queue">
-        <div class="tool-box input">
-            <input type="text" name="order" placeholder="Enter order">
+    <h3>Menu & Order</h3>
+    
+    <form method="post" action="/queue" class="menu-form">
+        <div class="menu-items">
+            
+            {% for item, details in menu.items() %}
+            <div class="menu-item">
+                <label for="item-{{ loop.index }}" class="menu-item-label">
+                    {{ item }} (P{{ "%.2f"|format(details.price) }})
+                </label>
+                <input type="number" name="{{ item }}" id="item-{{ loop.index }}" 
+                      class="quantity-input" min="0" value="0">
+            </div>
+            {% endfor %}
+
         </div>
         <div class="tool-box button">
             <button type="submit" name="enterOrder" value="newOrder">Add Order</button>
         </div>
+    </form>
+    
+    <form method="post" action="/queue">
         <div class="tool-box button">
-            <button type="submit" name="finishOrder" value="orderServed">Serve Order</button>
+            <button type="submit" name="finishOrder" value="orderServed">Serve Next Order</button>
         </div>
     </form>
 
@@ -24,18 +38,25 @@
     {% endif %}
 
     <div class="queue-display">
-      {% if queue %}
-        <div class="stickman-line">
-          {% for item in queue %}
-            <div class="stickman" data-tooltip="{{ item.order }}">
+      <div class="stickman-line">
+        {% for item in queue %}
+          <div class="stickman {% if loop.first %}stickman-first{% endif %} {% if loop.last %}stickman-last{% endif %}" 
+              style="--order-code: {{ item.code }};" data-tooltip="Order: {{ item.code }}
+Est. Wait: {{ item.waiting_time }}
+Total: P{{ '%.2f'|format(item.total_price) }}
+Items:
+{% for order_item in item.order_items %}- {{ order_item.name }} (x{{ order_item.quantity }})
+{% endfor %}">
+              
               🧍
               <div class="code-label">{{ item.code }}</div>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="empty-text">Queue is empty 🌸</p>
-      {% endif %}
+          </div>
+        {% endfor %}
+        
+        {% if not queue %}
+            <p class="empty-text">Queue is empty 🌸</p>
+        {% endif %}
+      </div>
     </div>
 </div>
 </section>
