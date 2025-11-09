@@ -38,7 +38,7 @@ class Queue:
             while current:
                 queue.append(current.data)
                 current = current.next
-            list = (' '.join(queue))
+            list = (' '.join(queue))    
             return  list
 
 cashier = Queue()
@@ -66,12 +66,23 @@ def works():
 def queue():
     if request.method == "POST":
         data = str(request.form.get('order', ''))
-        if request.form.get('enterOrder') == 'newOrder':
+        if not data:
+            if request.form.get('finishOrder') == 'orderServed':
+                cashier.dequeue()
+                result = cashier.display()
+                return render_template('queue.html', result=result)
+            else: 
+                result = cashier.display()
+                return render_template('queue.html', result=result)
+        elif request.form.get('enterOrder') == 'newOrder':
             cashier.enqueue(data)
             result = cashier.display()
             return render_template('queue.html', result=result)
+        else:
+            result = cashier.display()
+            return render_template('queue.html', result=result)
     result = cashier.display()
-    return render_template('queue.html', result=result)
+    return render_template('queue.html', result=result), 
 
 if __name__ == '__main__':
     app.run(debug=True)
