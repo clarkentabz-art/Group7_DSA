@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import random
 from myqueue import Queue
 
 app = Flask(__name__)
