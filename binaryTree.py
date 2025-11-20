@@ -46,7 +46,10 @@ class BinaryTree:
 
     def postorder_traversal(self, start, traversal):
         """Traverse the tree in postorder (left, right, root)."""
-        #code for implemen
+        if start:
+            traversal = self.postorder_traversal(start.left,traversal)
+            traversal = self.postorder_traversal(start.right,traversal)
+            traversal += (str(start.value) + " ")
         return traversal   
     
     def search(self, root, key):
@@ -118,8 +121,9 @@ if __name__ == "__main__":
     print("\n\nInorder traversal: " + tree.inorder_traversal(tree.root,""))
     # tree.inorder_traversal(tree.root)
     print("\n\nPostorder traversal: " + tree.postorder_traversal(tree.root,""))
- 
     # tree.postorder_traversal(tree.root)
+
+    print("\n")
 
     #tree search test
     tree.search(tree.root, "B")
