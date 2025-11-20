@@ -66,10 +66,6 @@ class BinaryTree:
             print(f"Node {key} deleted.")
             return None
         
-        if key_node is None:
-            print(f"Node {key} not found.")
-            return root
-        
         #BFS traversal para sa last/deepest node'd
         queue = [root]
         key_node = None
@@ -89,6 +85,10 @@ class BinaryTree:
                 queue.append(current.right)
 
         key_node.value = deep.value
+
+        if key_node is None:
+            print(f"Node {key} not found.")
+            return root
 
         if deep_parent.right == deep:
             deep_parent.right = None
