@@ -5,7 +5,6 @@ class Node:
         self.left = None
         self.right = None
 
-
 class BinaryTree:
     """A binary tree data structure."""
     def __init__(self, root_value=None):
@@ -45,10 +44,10 @@ class BinaryTree:
             traversal = self.inorder_traversal(start.right,traversal)
         return traversal    
 
-    def postorder_traversal(self, start,traversal):
+    def postorder_traversal(self, start, traversal):
         """Traverse the tree in postorder (left, right, root)."""
         #code for implemen
-        return "traversal"    
+        return traversal   
     
     def search(self, root, key):
         value = root.value
@@ -58,6 +57,47 @@ class BinaryTree:
         else:
             return print(f"Sorry the Node you entered was not found under the {self.root.value} Tree, Try another Node or another Tree to search")
         
+    def delete(self, root, key):
+        if root is None:
+            print("No tree hre!")
+            return None
+        
+        if root.value == key and root.left is None and root.right is None:
+            print(f"Node {key} deleted.")
+            return None
+        
+        if key_node is None:
+            print(f"Node {key} not found.")
+            return root
+        
+        #BFS traversal para sa last/deepest node'd
+        queue = [root]
+        key_node = None
+        deep = None
+        deep_parent = None
+
+        while queue:
+            current = queue.pop(0)
+            if current.value == key:
+                key_node = current 
+            deep = current
+            if current.left: 
+                deep_parent = current
+                queue.append(current.left)
+            if current.right:
+                deep_parent = current
+                queue.append(current.right)
+
+        key_node.value = deep.value
+
+        if deep_parent.right == deep:
+            deep_parent.right = None
+            print(f"Node {key} deleted.")
+        else:
+            deep_parent.left = None
+            print(f"Node {key} deleted.")
+
+
 if __name__ == "__main__":
    
     tree = BinaryTree("R")
@@ -85,6 +125,8 @@ if __name__ == "__main__":
     tree.search(tree.root, "B")
     tree.search(tree.root, "G")
     tree.search(tree.root, "Z")
+    tree.delete(tree.root, "B")
+    tree.search(tree.root, "B")
 
     print()
 
