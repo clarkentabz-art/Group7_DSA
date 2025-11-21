@@ -2,8 +2,8 @@ class Node:
     """A node in a binary tree."""
     def __init__(self, value, left=None, right=None):
         self.value = value
-        self.left = None
-        self.right = None
+        self.left = left
+        self.right = right
 
 
 class BinaryTree:
@@ -16,8 +16,7 @@ class BinaryTree:
         if current_node.left is None:
             current_node.left = Node(value)
         else:
-            new_node = Node(value)
-            new_node.left = current_node.left
+            new_node = Node(value, left=current_node.left)
             current_node.left = new_node
 
     def insert_right(self, current_node, value):
@@ -25,54 +24,44 @@ class BinaryTree:
         if current_node.right is None:
             current_node.right = Node(value)
         else:
-            new_node = Node(value)
-            new_node.right = current_node.right
+            new_node = Node(value, right=current_node.right)
             current_node.right = new_node
 
-    def preorder_traversal(self, start, traversal):
-        """Traverse the tree in preorder (root, left, right)."""
+    def preorder_traversal(self, start, traversal=""):
         if start:
-            traversal += (str(start.value) + " ")
+            traversal += str(start.value) + " "
             traversal = self.preorder_traversal(start.left, traversal)
             traversal = self.preorder_traversal(start.right, traversal)
-        return traversal
+        return traversal.strip()
 
-    def inorder_traversal(self, start, traversal):
-        """Traverse the tree in inorder (left, root, right)."""
+    def inorder_traversal(self, start, traversal=""):
         if start:
             traversal = self.inorder_traversal(start.left, traversal)
-            traversal += (str(start.value) + " ")
+            traversal += str(start.value) + " "
             traversal = self.inorder_traversal(start.right, traversal)
-        return traversal
+        return traversal.strip()
 
-    def postorder_traversal(self, start, traversal):
-        """Traverse the tree in postorder (left, right, root)."""
+    def postorder_traversal(self, start, traversal=""):
         if start:
             traversal = self.postorder_traversal(start.left, traversal)
             traversal = self.postorder_traversal(start.right, traversal)
-            traversal += (str(start.value) + " ")
-        return traversal
+            traversal += str(start.value) + " "
+        return traversal.strip()
 
     def search(self, root, key):
-        value = root.value
-        searched = self.inorder_traversal(root, "")
-        if key in searched:
-            return print(f"We have found your Node under the {self.root.value} Tree")
-        else:
-            return print(f"Sorry the Node you entered was not found under the {self.root.value} Tree, Try another Node or another Tree to search")
+        """Return True if node exists, False otherwise."""
+        nodes = self.inorder_traversal(root).split()
+        return key in nodes
 
     def delete(self, root, key):
-        """Delete a node using BFS (level-order delete)."""
+        """Delete a node using BFS (level-order delete). Return message."""
         if root is None:
-            print("No tree here!")
-            return None
+            return "No tree exists."
 
-        # If root is the only node
         if root.value == key and root.left is None and root.right is None:
-            print(f"Node {key} deleted.")
-            return None
+            self.root = None
+            return f"Node '{key}' deleted. Tree is now empty."
 
-        # BFS traversal para sa last/deepest node'd
         queue = [(root, None)]
         key_node = None
         deep = None
@@ -92,8 +81,7 @@ class BinaryTree:
                 queue.append((current.right, current))
 
         if key_node is None:
-            print(f"Node {key} not found.")
-            return root
+            return f"Node '{key}' not found."
 
         key_node.value = deep.value
 
@@ -103,15 +91,11 @@ class BinaryTree:
             else:
                 deep_parent.right = None
 
-        print(f"Node {key} deleted.")
-        return root
+        return f"Node '{key}' deleted."
 
-
+# Optional: quick test if run standalone
 if __name__ == "__main__":
-
     tree = BinaryTree("R")
-
-    # Insert nodes
     tree.insert_left(tree.root, "A")
     tree.insert_right(tree.root, "B")
     tree.insert_left(tree.root.left, "C")
@@ -120,28 +104,12 @@ if __name__ == "__main__":
     tree.insert_right(tree.root.right, "F")
     tree.insert_left(tree.root.right.right, "G")
 
-    print()
-    print("Preorder traversal: " + tree.preorder_traversal(tree.root, ""))
-    print("\nInorder traversal: " + tree.inorder_traversal(tree.root, ""))
-    print("\nPostorder traversal: " + tree.postorder_traversal(tree.root, ""))
+    print("Preorder:", tree.preorder_traversal(tree.root))
+    print("Inorder:", tree.inorder_traversal(tree.root))
+    print("Postorder:", tree.postorder_traversal(tree.root))
 
-    print("\n")
-    print("Search tests:")
-    tree.search(tree.root, "B")
-    tree.search(tree.root, "G")
-    tree.search(tree.root, "Z")
+    print("Search B:", tree.search(tree.root, "B"))
+    print("Search Z:", tree.search(tree.root, "Z"))
 
-    print("\ndelete test")
-
-    print("\nTree before deleting B:")
-    print("Preorder:", tree.preorder_traversal(tree.root, ""))
-    print("Inorder:", tree.inorder_traversal(tree.root, ""))
-    print("Postorder:", tree.postorder_traversal(tree.root, ""))
-
-    print("\nDeleting node B")
-    tree.delete(tree.root, "B")
-
-    print("\nTree after deleting B:")
-    print("Preorder:", tree.preorder_traversal(tree.root, ""))
-    print("Inorder:", tree.inorder_traversal(tree.root, ""))
-    print("Postorder:", tree.postorder_traversal(tree.root, ""))
+    print(tree.delete(tree.root, "B"))
+    print("Preorder after delete:", tree.preorder_traversal(tree.root))
