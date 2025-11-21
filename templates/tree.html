@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Goal Tracker{% endblock %}
+
+{% block content %}
+<section class="goal-tracker-outer" style="margin: 30px;">
+    <div class="goal-tracker-container" style="display: flex; gap: 20px;">
+
+        <!-- Courses Panel -->
+        <div class="courses-panel" style="flex: 1; max-width: 250px; padding: 15px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
+            <h3>Courses</h3>
+            <form method="POST">
+                {% for course in courses %}
+                    <button type="submit" name="course" value="{{ course }}" 
+                            style="width: 100%; margin-bottom: 8px; padding: 8px;
+                                   {% if course == selected_course %}background-color: #d4edda;{% else %}background-color: #f0f0f0;{% endif %}">
+                        {{ course }}
+                    </button>
+                {% endfor %}
+            </form>
+        </div>
+
+        <!-- Tree Panel -->
+        <div class="tree-panel" style="flex: 3; padding: 15px; border: 1px solid #ccc; border-radius: 10px; background-color: #fff; overflow-x:auto;">
+            <h3>Goal Tree: {{ selected_course }}</h3>
+
+            <!-- Recursive macro to render tree -->
+            {% macro render_node(node) %}
+                {% if node %}
+                    <li style="text-align:center; margin:10px 0;">
+                        {{ node.value }}
+                        {% if node.left or node.right %}
+                            <ul style="list-style:none; padding-left:20px;">
+                                {{ render_node(node.left) }}
+                                {{ render_node(node.right) }}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endmacro %}
+
+            <ul style="list-style:none; padding-left:0;">
+                {{ render_node(tree) }}
+            </ul>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
