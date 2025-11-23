@@ -128,6 +128,16 @@ def tree_page():
     tree_html = ""
 
     if request.method == "POST":
+        # --- DELETE COURSE ---
+        delete_course = request.form.get("delete_course")
+        if delete_course and delete_course in courses:
+            courses.pop(delete_course)
+            result = f"Course '{delete_course}' deleted successfully."
+            # If deleted course was selected, pick another
+            selected_course = next(iter(courses.keys()), None)
+            tree = courses.get(selected_course)
+            last_selected_course["course"] = selected_course
+
         # --- Course selection ---
         clicked_course = request.form.get("course")
         if clicked_course and clicked_course in courses:
@@ -180,23 +190,6 @@ def tree_page():
 
     nodes_with_paths = gather_nodes_with_paths(tree.root) if tree else []
 
-    # --- Toggle node completion ---
-    toggle_path = request.form.get("toggle_path")
-    if toggle_path and tree:
-        node = tree.find_by_path(list(toggle_path))
-        if node:
-            # If node is root, check children
-            if node == tree.root:
-                left_done = node.left.completed if node.left else True
-                right_done = node.right.completed if node.right else True
-                if left_done and right_done:
-                    node.completed = not node.completed
-                else:
-                    result = "Root cannot be toggled until all children are green."
-            else:
-                node.completed = not node.completed
-
-
     return render_template(
         "tree.html",
         result=result,
@@ -206,6 +199,7 @@ def tree_page():
         nodes_with_paths=nodes_with_paths,
         tree_html=tree_html
     )
+
 
 if __name__ == "__main__":
     # Run on port 5001 to avoid conflicts
