@@ -3,46 +3,133 @@
 
 {% block content %}
 <section class="goal-tracker-outer" style="margin: 30px;">
-    <div class="goal-tracker-container" style="display: flex; gap: 20px;">
+  <div class="goal-tracker-container" style="display:flex; gap:20px;">
 
-        <!-- Courses Panel -->
-        <div class="courses-panel" style="flex: 1; max-width: 250px; padding: 15px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9;">
-            <h3>Courses</h3>
-            <form method="POST">
-                {% for course in courses %}
-                    <button type="submit" name="course" value="{{ course }}" 
-                            style="width: 100%; margin-bottom: 8px; padding: 8px;
-                                   {% if course == selected_course %}background-color: #d4edda;{% else %}background-color: #f0f0f0;{% endif %}">
-                        {{ course }}
-                    </button>
-                {% endfor %}
-            </form>
+    <!-- Courses Panel -->
+    <div class="courses-panel" style="flex:1; max-width:250px; padding:15px; border:1px solid #ccc; border-radius:10px; background:#f9f9f9;">
+      <h3>Courses</h3>
+      <form method="POST" id="courseForm">
+        {% for course in courses %}
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <button type="submit" name="course" value="{{ course }}" style="flex:1; padding:8px; {% if course==selected_course %}background:#d4edda;{% else %}background:#f0f0f0;{% endif %}; border: none;">
+            {{ course }}
+          </button>
+          <button type="button" onclick="confirmDelete('{{ course }}')" style="background:#ff7878; padding:5px 8px; border:none; border-radius:4px; color:white;">X</button>
         </div>
-
-        <!-- Tree Panel -->
-        <div class="tree-panel" style="flex: 3; padding: 15px; border: 1px solid #ccc; border-radius: 10px; background-color: #fff; overflow-x:auto;">
-            <h3>Goal Tree: {{ selected_course }}</h3>
-
-            <!-- Recursive macro to render tree -->
-            {% macro render_node(node) %}
-                {% if node %}
-                    <li style="text-align:center; margin:10px 0;">
-                        {{ node.value }}
-                        {% if node.left or node.right %}
-                            <ul style="list-style:none; padding-left:20px;">
-                                {{ render_node(node.left) }}
-                                {{ render_node(node.right) }}
-                            </ul>
-                        {% endif %}
-                    </li>
-                {% endif %}
-            {% endmacro %}
-
-            <ul style="list-style:none; padding-left:0;">
-                {{ render_node(tree) }}
-            </ul>
-        </div>
-
+        {% endfor %}
+        <input type="hidden" id="delete_course_input" name="delete_course">
+        <button type="submit" name="create_custom" value="1" style="width:100%; margin-top:8px; padding:8px; background:#f0d0d5; border-radius:4px;">Create Custom Goals</button>
+      </form>
     </div>
+
+    <!-- Tree Panel -->
+    <div class="tree-panel" style="flex:3; height:600px; padding:20px; border:1px solid #ccc; border-radius:10px; background:#fff; overflow:auto; text-align:center;">
+      <h3>Goal Tree: {{ selected_course }}</h3>
+      <p style="color:green;">{{ result }}</p>
+
+      {% macro render_node(node, path) %}
+        {% if node %}
+        <div style="display:inline-block; margin:12px; text-align:center; vertical-align:top;">
+          <div style="padding:10px 14px; border-radius:8px; border:2px solid #60a5fa; background:{% if node.completed %}#bbf7d0{% else %}#eef2ff{% endif %}; min-width:160px; transition: transform .12s ease;">
+            
+            <!-- Toggle completion form -->
+            <form method="POST" style="display:inline;">
+              <input type="hidden" name="toggle_path" value="{{ path }}">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" onchange="this.form.submit();" {% if node.completed %}checked{% endif %}>
+                <span style="font-weight:600;">{{ node.value }}</span>
+              </label>
+            </form>                                                                  
+          </div>
+
+          <!-- Children row -->
+          {% if node.left or node.right %}
+          <div style="margin-top:12px; display:flex; gap:18px; justify-content:center; align-items:flex-start;">
+            {% if node.left %}
+              {{ render_node(node.left, path + 'L') }}
+            {% else %}
+              <div style="min-width:160px; height:0;"></div>
+            {% endif %}
+            {% if node.right %}
+              {{ render_node(node.right, path + 'R') }}
+            {% else %}
+              <div style="min-width:160px; height:0;"></div>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      {% endmacro %}
+
+      <div id="tree-root" style="display:flex; justify-content:center;">
+        {% if tree %}
+          {{ render_node(tree, '') }}
+        {% else %}
+          <p>No course selected.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Custom Goal Panel -->
+    {% if show_custom_panel %}
+    <div class="custom-goal-panel" style="flex:1; padding:20px; border:1px solid #ccc; border-radius:10px; background:#fff;">
+      <h3>Create / Insert Node</h3>
+
+      <!-- Quick create root + optional first child -->
+      <form method="POST" style="margin-bottom:12px;">
+        <label>Course Title:</label>
+        <input type="text" name="root_goal" style="width:100%; padding:8px; margin-bottom:8px;">
+        <label>Top Goal (optional):</label>
+        <input type="text" name="child_goal" style="width:100%; padding:8px; margin-bottom:8px;">
+        <button type="submit" name="save_custom_tree" value="1" style="width:100%; padding:10px; background:#d4edda; border:none; border-radius:6px;">Save Tree</button>
+      </form>
+
+      <!-- Insert node under existing node -->
+      <hr>
+      <h4>Insert node under existing node</h4>
+      <form method="POST">
+        <label>Parent node:</label>
+        <select name="parent_path" style="width:100%; padding:8px; margin-bottom:8px;">
+          {% for val, path in nodes_with_paths %}
+            <option value="{{ path }}">{{ val }} {% if path=='' %}(root){% endif %}</option>
+          {% endfor %}
+        </select>
+        <label>Side:</label>
+        <select name="side" style="width:100%; padding:8px; margin-bottom:8px;">
+          <option value="L">Left</option>
+          <option value="R">Right</option>
+        </select>
+        <label>New node value:</label>
+        <input type="text" name="new_value" style="width:100%; padding:8px; margin-bottom:8px;">
+        <button type="submit" style="width:100%; padding:10px; background:#e2e8f0; border:none; border-radius:6px;">Insert Node</button>
+      </form>
+    </div>
+    {% endif %}
+
+  </div>
 </section>
+
+<!-- Delete modal script -->
+<div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+  <div style="background:white; padding:20px; border-radius:10px; width:300px; text-align:center;">
+    <h3>Delete Course?</h3>
+    <p>This action cannot be undone.</p>
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+      <button onclick="closeModal()" style="padding:8px 15px; background:#ccc; border:none; border-radius:6px;">Cancel</button>
+      <button onclick="submitDelete()" style="padding:8px 15px; background:#ff6b6b; color:white; border:none; border-radius:6px;">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function confirmDelete(courseName) {
+    document.getElementById('delete_course_input').value = courseName;
+    document.getElementById('deleteModal').style.display = 'flex';
+  }
+  function closeModal() { document.getElementById('deleteModal').style.display = 'none'; }
+  function submitDelete() {
+    document.querySelector('.courses-panel form').submit();
+  }
+</script>
+
 {% endblock %}
