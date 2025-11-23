@@ -1,9 +1,12 @@
+# binaryTree.py
+
 class Node:
     """A node in a binary tree."""
     def __init__(self, value, left=None, right=None):
         self.value = value
         self.left = left
         self.right = right
+        self.completed = False  # checkbox state
 
 
 class BinaryTree:
@@ -27,6 +30,7 @@ class BinaryTree:
             new_node = Node(value, right=current_node.right)
             current_node.right = new_node
 
+    # traversal methods unchanged
     def preorder_traversal(self, start, traversal=""):
         if start:
             traversal += str(start.value) + " "
@@ -93,23 +97,48 @@ class BinaryTree:
 
         return f"Node '{key}' deleted."
 
-# Optional: quick test if run standalone
-if __name__ == "__main__":
-    tree = BinaryTree("R")
-    tree.insert_left(tree.root, "A")
-    tree.insert_right(tree.root, "B")
-    tree.insert_left(tree.root.left, "C")
-    tree.insert_right(tree.root.left, "D")
-    tree.insert_left(tree.root.right, "E")
-    tree.insert_right(tree.root.right, "F")
-    tree.insert_left(tree.root.right.right, "G")
+    # -------------------------
+    # New helpers for web UI
+    # -------------------------
+    def find_by_path(self, path):
+        """
+        Path is a list of 'L' and 'R' steps from root.
+        Example: ['L','R','L'] -> root.left.right.left
+        """
+        node = self.root
+        if node is None:
+            return None
+        for step in path:
+            if step == 'L':
+                node = node.left
+            elif step == 'R':
+                node = node.right
+            else:
+                return None
+            if node is None:
+                return None
+        return node
 
-    print("Preorder:", tree.preorder_traversal(tree.root))
-    print("Inorder:", tree.inorder_traversal(tree.root))
-    print("Postorder:", tree.postorder_traversal(tree.root))
+    def toggle_node(self, node):
+        """
+        Toggle node.completed only if allowed.
+        Root is clickable only when both existing children are completed.
+        """
+        if node is None:
+            return "Node not found."
 
-    print("Search B:", tree.search(tree.root, "B"))
-    print("Search Z:", tree.search(tree.root, "Z"))
-
-    print(tree.delete(tree.root, "B"))
-    print("Preorder after delete:", tree.preorder_traversal(tree.root))
+        if node is self.root:
+            # if root has no children, allow toggle
+            if node.left is None and node.right is None:
+                node.completed = not node.completed
+                return f"Toggled root '{node.value}' to {node.completed}"
+            left_ready = node.left is None or node.left.completed
+            right_ready = node.right is None or node.right.completed
+            if left_ready and right_ready:
+                node.completed = not node.completed
+                return f"Toggled root '{node.value}' to {node.completed}"
+            else:
+                return "Root is locked until both child branches are completed."
+        else:
+            node.completed = not node.completed
+            return f"Toggled '{node.value}' to {node.completed}"
