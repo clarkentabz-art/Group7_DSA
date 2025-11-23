@@ -27,47 +27,69 @@
       <h3>Goal Tree: {{ selected_course }}</h3>
       <p style="color:green;">{{ result }}</p>
 
-      {% macro render_node(node, path) %}
-        {% if node %}
-        <div style="display:inline-block; margin:12px; text-align:center; vertical-align:top;">
-          <div style="padding:10px 14px; border-radius:8px; border:2px solid #60a5fa; background:{% if node.completed %}#bbf7d0{% else %}#eef2ff{% endif %}; min-width:160px; transition: transform .12s ease;">
-            
-            <!-- Toggle completion form -->
-            <form method="POST" style="display:inline;">
-              <input type="hidden" name="toggle_path" value="{{ path }}">
-              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                <input type="checkbox" onchange="this.form.submit();" {% if node.completed %}checked{% endif %}>
-                <span style="font-weight:600;">{{ node.value }}</span>
-              </label>
-            </form>                                                                  
-          </div>
-
-          <!-- Children row -->
-          {% if node.left or node.right %}
-          <div style="margin-top:12px; display:flex; gap:18px; justify-content:center; align-items:flex-start;">
-            {% if node.left %}
-              {{ render_node(node.left, path + 'L') }}
-            {% else %}
-              <div style="min-width:160px; height:0;"></div>
-            {% endif %}
-            {% if node.right %}
-              {{ render_node(node.right, path + 'R') }}
-            {% else %}
-              <div style="min-width:160px; height:0;"></div>
-            {% endif %}
-          </div>
-          {% endif %}
-        </div>
-        {% endif %}
-      {% endmacro %}
-
-      <div id="tree-root" style="display:flex; justify-content:center;">
-        {% if tree %}
-          {{ render_node(tree, '') }}
-        {% else %}
-          <p>No course selected.</p>
-        {% endif %}
+      {% if selected_course == "Learn how to sew" %}
+      <div class="tree">
+        <ul>
+          <li><a href="#"><span>Learn how to sew</span></a>
+            <ul>
+              <li><a href="#"><span>Alter a T-shirt</span></a>
+                <ul>
+                  <li><a href="#"><span>Learn basic stitches</span></a></li>
+                  <li><a href="#"><span>Learn basic fabric types</span></a></li>
+                </ul>
+              </li>
+              <li><a href="#"><span>Create your own patterns</span></a>
+                <ul>
+                  <li><a href="#"><span>Sew a dress</span></a></li>
+                </ul>
+              </li>
+              <li><a href="#"><span>Sew a pocket</span></a>
+                <ul>
+                  <li><a href="#"><span>Use a sewing machine</span></a></li>
+                  <li><a href="#"><span>Draping techniques</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
+
+      {% elif selected_course == "Learn how to draw" %}
+      <div class="tree">
+        <ul>
+          <li><a href="#"><span>Learn how to draw</span></a>
+            <ul>
+              <li><a href="#"><span>Sketch basic shapes</span></a>
+                <ul>
+                  <li><a href="#"><span>Circle & Square</span></a></li>
+                  <li><a href="#"><span>Own Shapes</span></a></li>
+                </ul>
+              </li>
+              <li><a href="#"><span>Sketch Basic Forms</span></a>
+                <ul>
+                  <li><a href="#"><span>Cylinder and Cone</span></a></li>
+                  <li><a href="#"><span>Pyramid and Cube</span></a></li>
+                </ul>
+              </li>
+              <li><a href="#"><span>Perspective drawing</span></a>
+                <ul>
+                  <li><a href="#"><span>One-point perspective</span></a></li>
+                  <li><a href="#"><span>Two-point perspective</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      {% elif tree_html %}
+      <div class="tree">
+        {{ tree_html | safe }}
+      </div>
+
+      {% else %}
+      <p>No goal tree available for this course.</p>
+      {% endif %}
     </div>
 
     <!-- Custom Goal Panel -->
@@ -75,7 +97,6 @@
     <div class="custom-goal-panel" style="flex:1; padding:20px; border:1px solid #ccc; border-radius:10px; background:#fff;">
       <h3>Create / Insert Node</h3>
 
-      <!-- Quick create root + optional first child -->
       <form method="POST" style="margin-bottom:12px;">
         <label>Course Title:</label>
         <input type="text" name="root_goal" style="width:100%; padding:8px; margin-bottom:8px;">
@@ -84,7 +105,6 @@
         <button type="submit" name="save_custom_tree" value="1" style="width:100%; padding:10px; background:#d4edda; border:none; border-radius:6px;">Save Tree</button>
       </form>
 
-      <!-- Insert node under existing node -->
       <hr>
       <h4>Insert node under existing node</h4>
       <form method="POST">
@@ -103,13 +123,17 @@
         <input type="text" name="new_value" style="width:100%; padding:8px; margin-bottom:8px;">
         <button type="submit" style="width:100%; padding:10px; background:#e2e8f0; border:none; border-radius:6px;">Insert Node</button>
       </form>
+
+      <form method="POST" style="margin-top:15px;">
+        <button type="submit" name="finish_custom" value="1" style="width:100%; padding:10px; background:#a0e8a0; border:none; border-radius:6px;">DONE</button>
+      </form>
     </div>
     {% endif %}
 
   </div>
 </section>
 
-<!-- Delete modal script -->
+<!-- Delete modal -->
 <div id="deleteModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
   <div style="background:white; padding:20px; border-radius:10px; width:300px; text-align:center;">
     <h3>Delete Course?</h3>
@@ -122,14 +146,43 @@
 </div>
 
 <script>
-  function confirmDelete(courseName) {
+function confirmDelete(courseName) {
     document.getElementById('delete_course_input').value = courseName;
     document.getElementById('deleteModal').style.display = 'flex';
-  }
-  function closeModal() { document.getElementById('deleteModal').style.display = 'none'; }
-  function submitDelete() {
-    document.querySelector('.courses-panel form').submit();
-  }
+}
+function closeModal() { document.getElementById('deleteModal').style.display = 'none'; }
+function submitDelete() { document.querySelector('.courses-panel form').submit(); }
+
+// Expand/collapse for custom trees
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.tree li > a').forEach(link => {
+        const childUl = link.parentElement.querySelector('ul');
+        if(childUl){
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                childUl.style.display = (childUl.style.display === 'none') ? 'block' : 'none';
+            });
+        }
+    });
+});
 </script>
+
+<style>
+.tree { width: 100%; height: auto; text-align: center; }
+.tree ul { padding-top: 20px; position: relative; transition: .5s; }
+.tree li { display: inline-table; text-align: center; list-style-type: none; position: relative; padding: 10px; transition: .5s; }
+.tree li::before, .tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 1px solid #ccc; width: 51%; height: 10px; }
+.tree li::after { right:auto; left:50%; border-left:1px solid #ccc; }
+.tree li.single-node::after, .tree li.single-node::before { display:none; }
+.tree li.single-node { padding-top:0; }
+.tree li.root::before, .tree li.root::after { border:0 none; }
+.tree li.last-node::before { border-right:1px solid #ccc; border-radius:0 5px 0 0; }
+.tree li.first-node::after { border-radius:5px 0 0 0; }
+.tree ul ul::before { content:''; position:absolute; top:0; left:50%; border-left:1px solid #ccc; width:0; height:20px; }
+.tree li a { border:1px solid #ccc; padding:10px; display:inline-grid; border-radius:5px; text-decoration:none; transition:.5s; }
+.tree li a span { border:1px solid #ccc; border-radius:5px; color:#666; padding:8px; font-size:12px; text-transform:uppercase; letter-spacing:1px; font-weight:500; }
+.tree li a:hover, .tree li a:hover i, .tree li a:hover span, .tree li a:hover+ul li a { background:#c8e4f8; color:#000; border:1px solid #94a0b4; }
+.tree li a:hover+ul li::after, .tree li a:hover+ul li::before, .tree li a:hover+ul::before, .tree li a:hover+ul ul::before { border-color:#94a0b4; }
+</style>
 
 {% endblock %}
