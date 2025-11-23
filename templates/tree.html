@@ -14,11 +14,11 @@
           <button type="submit" name="course" value="{{ course }}" style="flex:1; padding:8px; {% if course==selected_course %}background:#d4edda;{% else %}background:#f0f0f0;{% endif %}; border: none;">
             {{ course }}
           </button>
-          <button type="button" onclick="confirmDelete('{{ course }}')" style="background:#ff7878; padding:5px 8px; border:none; border-radius:4px; color:white;">X</button>
+          <button type="button" onclick="confirmDelete('{{ course }}')" style="background:#f1c7e1; padding:5px 8px; border:none; border-radius:4px; color:white;">X</button>
         </div>
         {% endfor %}
         <input type="hidden" id="delete_course_input" name="delete_course">
-        <button type="submit" name="create_custom" value="1" style="width:100%; margin-top:8px; padding:8px; background:#f0d0d5; border-radius:4px;">Create Custom Goals</button>
+        <button type="submit" name="create_custom" value="1" style="width:100%; margin-top:8px; padding:8px; background:lab(86.22% -3.02 73.29)69% 0%); border-radius:4px;">Create Custom Goals</button>
       </form>
     </div>
 
@@ -28,59 +28,66 @@
       <p style="color:green;">{{ result }}</p>
 
       {% if selected_course == "Learn how to sew" %}
-      <div class="tree">
-        <ul>
-          <li><a href="#"><span>Learn how to sew</span></a>
-            <ul>
-              <li><a href="#"><span>Alter a T-shirt</span></a>
-                <ul>
-                  <li><a href="#"><span>Learn basic stitches</span></a></li>
-                  <li><a href="#"><span>Learn basic fabric types</span></a></li>
-                </ul>
-              </li>
-              <li><a href="#"><span>Create your own patterns</span></a>
-                <ul>
-                  <li><a href="#"><span>Sew a dress</span></a></li>
-                </ul>
-              </li>
-              <li><a href="#"><span>Sew a pocket</span></a>
-                <ul>
-                  <li><a href="#"><span>Use a sewing machine</span></a></li>
-                  <li><a href="#"><span>Draping techniques</span></a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+    <div class="tree">
+      <ul>
+        <li><a href="#"><span>Learn how to sew</span></a>
+          <ul>
+            <li><a href="#"><span>Sew a dress</span></a>
+              <ul>
+                <li><a href="#"><span>Alter a shirt</span></a>
+                  <ul>
+                    <li><a href="#"><span>Learn basic stitches</span></a></li>
+                    <li><a href="#"><span>Learn basic fabric types</span></a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#"><span>Sew a pocket</span></a>
+              <ul>
+                <li><a href="#"><span>Use a sewing machine</span></a></li>
+                <li><a href="#"><span>Learn draping techniques</span></a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
 
       {% elif selected_course == "Learn how to draw" %}
-      <div class="tree">
-        <ul>
-          <li><a href="#"><span>Learn how to draw</span></a>
-            <ul>
-              <li><a href="#"><span>Sketch basic shapes</span></a>
-                <ul>
-                  <li><a href="#"><span>Circle & Square</span></a></li>
-                  <li><a href="#"><span>Own Shapes</span></a></li>
-                </ul>
-              </li>
-              <li><a href="#"><span>Sketch Basic Forms</span></a>
-                <ul>
-                  <li><a href="#"><span>Cylinder and Cone</span></a></li>
-                  <li><a href="#"><span>Pyramid and Cube</span></a></li>
-                </ul>
-              </li>
-              <li><a href="#"><span>Perspective drawing</span></a>
-                <ul>
-                  <li><a href="#"><span>One-point perspective</span></a></li>
-                  <li><a href="#"><span>Two-point perspective</span></a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+    <div class="tree">
+      <ul>
+        <li><a href="#"><span>Learn how to draw</span></a>
+          <ul>
+            <li><a href="#"><span>Perspective drawing</span></a>
+              <ul>
+                <li><a href="#"><span>One-point perspective</span></a>
+                  <ul>
+                    <li><a href="#"><span>Sketch basic shapes</span></a>
+                      <ul>
+                        <li><a href="#"><span>Circles & Squares</span></a></li>
+                        <li><a href="#"><span>Own Shapes</span></a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#"><span>Two-point perspective</span></a>
+                  <ul>
+                    <li><a href="#"><span>Sketch basic forms</span></a>
+                      <ul>
+                        <li><a href="#"><span>Cylinder & Cone</span></a></li>
+                        <li><a href="#"><span>Pyramid & Cube</span></a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
 
       {% elif tree_html %}
       <div class="tree">
