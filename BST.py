@@ -55,7 +55,12 @@ class BinarySearchTree:
         return
 
     def get_max_value(self, node):
-        return
+        if node is None:
+            return None
+        current = node
+        while current.right is not None:
+            current = current.right
+        return current.value
     
     def find_height(self, node):
         return
@@ -82,3 +87,4 @@ if __name__ == "__main__":
 
     #testing getting min
     print("Minimum value:", test.get_min_value(test.root))
+    print("Maximum value:", test.get_max_value(test.root))
