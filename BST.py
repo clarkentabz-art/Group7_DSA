@@ -52,8 +52,23 @@ class BinarySearchTree:
         return None
         
     def delete(self, node, value):
-        return
-
+        if node is None:
+            return None
+        if value < node.value:
+            node.left = self.delete(node.left, value)
+        elif value > node.value:
+            node.right = self.delete(node.right, value)
+        else:
+            if node.left is None:
+                return node.right
+            elif node.right is None:
+                return node.left
+            else:
+                temp_val = self.get_min_value(node.right)
+                node.value = temp_val
+                node.right = self.delete(node.right, temp_val)
+        return node
+        
     def get_max_value(self, node):
         if node is None:
             return None
@@ -88,3 +103,12 @@ if __name__ == "__main__":
     #testing getting min
     print("Minimum value:", test.get_min_value(test.root))
     print("Maximum value:", test.get_max_value(test.root))
+
+    #testing delete node
+    print("Inorder before delete:", test.inorder_traversal(test.root,""))
+    print("Preorder before delete:", test.preorder_traversal(test.root,""))
+    print("Postorder before delete:", test.postorder_traversal(test.root,""))
+    test.root = test.delete(test.root, 20)
+    print("Inorder after deleting 20:", test.inorder_traversal(test.root,""))
+    print("Preorder after deleting 20:", test.preorder_traversal(test.root,""))
+    print("Postorder after deleting 20:", test.postorder_traversal(test.root,""))
