@@ -48,8 +48,16 @@ class BinarySearchTree:
             traversal += (str(start.value) + " ")
         return traversal
     
-    def search(self, node, target):
-        return None
+    def search(self, node, value):
+        if node is None:
+            return None
+        elif node.value == value:
+            return node
+        elif value < node.value:
+            return self.search(node.left, value)
+        else:
+            return self.search(node.right,value)
+
         
     def delete(self, node, value):
         if node is None:
@@ -112,3 +120,10 @@ if __name__ == "__main__":
     print("Inorder after deleting 20:", test.inorder_traversal(test.root,""))
     print("Preorder after deleting 20:", test.preorder_traversal(test.root,""))
     print("Postorder after deleting 20:", test.postorder_traversal(test.root,""))
+
+    #testing search
+    result = test.search(test.root, 10)
+    if result:
+        print(f"Found the node with value: {result.value}")
+    else:
+        print("Value not found in the BST.")
