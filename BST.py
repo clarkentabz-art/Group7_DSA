@@ -86,8 +86,13 @@ class BinarySearchTree:
         return current.value
     
     def find_height(self, node):
-        return
-    
+        if node is None:
+            return -1   # height of an empty subtree
+        
+        left_height = self.find_height(node.left)
+        right_height = self.find_height(node.right)
+
+        return 1 + max(left_height, right_height)
 
 #TESTING
 if __name__ == "__main__":
@@ -102,6 +107,8 @@ if __name__ == "__main__":
     test.root = test.insert(test.root, 83)
     test.root = test.insert(test.root, 7)
     test.root = test.insert(test.root, 100)
+    test.root = test.insert(test.root, 200)
+    test.root = test.insert(test.root, 220)
 
     #testing traversal
     print("Inorder traversal:", test.inorder_traversal(test.root,""))
@@ -112,6 +119,9 @@ if __name__ == "__main__":
     print("Minimum value:", test.get_min_value(test.root))
     print("Maximum value:", test.get_max_value(test.root))
 
+    #testing find height
+    print("Height of tree before delete:", test.find_height(test.root))
+
     #testing delete node
     print("Inorder before delete:", test.inorder_traversal(test.root,""))
     print("Preorder before delete:", test.preorder_traversal(test.root,""))
@@ -120,6 +130,9 @@ if __name__ == "__main__":
     print("Inorder after deleting 20:", test.inorder_traversal(test.root,""))
     print("Preorder after deleting 20:", test.preorder_traversal(test.root,""))
     print("Postorder after deleting 20:", test.postorder_traversal(test.root,""))
+
+    #testing find height
+    print("Height of tree after delete:", test.find_height(test.root))
 
     #testing search
     result = test.search(test.root, 10)
